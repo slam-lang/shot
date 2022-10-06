@@ -1,0 +1,6 @@
+"slam-lang/stdlib" req
+"slam-lang/math" req
+
+"src" src
+"shot.slm" lib
+"shot-types/" libd
