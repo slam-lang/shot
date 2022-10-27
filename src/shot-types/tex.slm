@@ -1,0 +1,63 @@
+inc shot-types/shader.slm
+inc shot-types/v2.slm
+inc gl.slm
+inc libpng.slm
+  
+var offset v2.SIZE
+
+class texVert
+  prop dx int.SIZE
+  prop dy int.SIZE
+  prop dw int.SIZE
+  prop dh int.SIZE
+  
+  prop sx int.SIZE
+  prop sy int.SIZE
+  prop sw int.SIZE
+  prop sh int.SIZE
+
+  prop r int.SIZE
+  prop g int.SIZE
+  prop b int.SIZE
+  prop a int.SIZE
+end
+
+class tex
+  prop tex int.SIZE
+  prop size v2.SIZE
+  
+  var tmp int.SIZE
+  var prog int.SIZE
+
+  proc init 0 0
+    tex.prog
+    "#version 330 core\nlayout (location = 0) in vec4 vertex;\nlayout (location = 1) in vec4 tintColorIn;\nout vec2 texCoords;\nout vec4 tintColor;\nvoid main() {\ngl_position = vec4(vertex.xy, 0.0, 1.0);\ntexCoords = vertex.zw;\ntintColor = tintColorIn;\n}\n"
+    "#version 330 core\nin vec2 texCoords;\nin vec4 tintColor\nout vec4 color;\nuniform sampler2D text;\nvoid main() {\ncolor = tintColor * texture(text, texCoords);\n}\n"
+    (shader.new) put disc
+  
+    (png.init)
+    ret
+  end
+
+  proc new 1 1
+    tex.tmp 24 (heap.alloc) put disc
+
+    1 tex.tmp read tex.tex . (gl.GenTextures) 
+
+    GL_TEXTURE_2D tex.tmp read tex.tex . read (gl.BindTexture)
+    GL_TEXTURE_2D GL_TEXTURE_WRAP_S GL_REPEAT (gl.TexParameteri)
+    GL_TEXTURE_2D GL_TEXTURE_WRAP_T GL_REPEAT (gl.TexParameteri)
+
+    (png.new)
+    copy NULL == if [
+      "ERR" "Failed to load image" (log.msg)
+      (log.log)
+      0 quit
+    ]
+    disc
+
+    NULL
+    
+    ret
+  end
+end

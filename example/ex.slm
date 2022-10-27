@@ -1,0 +1,34 @@
+inc shot.slm
+inc shot-types/rect.slm
+inc shot-types/tex.slm
+inc shot-types/v2.slm
+
+var tempTex int.SIZE
+
+proc initialize 0 0
+  "test.png" (tex.new)
+  tempTex swap put disc
+
+  "init" (cstr.println)
+
+  ret
+end
+
+proc update 1 1
+  "update" (cstr.println)
+
+  ret
+end
+
+proc draw 0 0
+  "draw" (cstr.println)
+
+  ret
+end
+
+proc main 0 0
+  initialize update draw
+  (shotgame.new)
+
+  ret
+end

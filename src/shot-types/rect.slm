@@ -1,0 +1,76 @@
+inc shot-types/v2.slm
+
+class rect
+  prop pos v2.SIZE
+  prop size v2.SIZE
+
+  var tmp int.SIZE
+  var tmpn int.SIZE
+
+  proc new 4 1
+    rect.tmp 32 (heap.alloc) put disc
+    
+    rect.tmp read rect.size . v2.put disc
+    rect.tmp read rect.pos . v2.put disc
+
+    rect.tmp read
+
+    ret
+  end
+    
+  proc cpy 1 1
+    rect.tmp swap put disc
+
+    rect.tmpn 32 (heap.alloc) put disc
+
+    rect.tmpn read rect.tmp read 32 (mem.copy)
+
+    rect.tmpn read
+
+    ret
+  end
+
+  proc print 1 0
+    rect.tmp swap put disc
+
+    "[(" (cstr.print)
+    rect.tmp read rect.pos . v2.x . read (int.cstr) (cstr.print)
+    ", " (cstr.print)
+    rect.tmp read rect.pos . v2.y . read (int.cstr) (cstr.print)
+    "), (" (cstr.print)
+    rect.tmp read rect.size . v2.x . read (int.cstr) (cstr.print)
+    ", " (cstr.print)
+    rect.tmp read rect.size . v2.y . read (int.cstr) (cstr.print)
+    ")]" (cstr.print)
+    (cstr.cr)
+
+    ret
+  end
+
+  proc center 1 2
+    rect.tmp swap put disc
+
+    rect.tmp read rect.pos . v2.x . read
+    rect.tmp read rect.size . v2.x . read 2 / +
+
+    rect.tmp read rect.pos . v2.y . read
+    rect.tmp read rect.size . v2.y . read 2 / +
+    
+    ret
+  end
+
+  proc v2clamp 2 1
+    rect.tmp swap put disc
+
+    ret
+  end
+
+  proc vecIn 2 1
+    rect.tmp swap put disc
+    disc
+
+    bool.false
+
+    ret
+  end
+end

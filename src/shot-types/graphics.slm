@@ -1,0 +1,37 @@
+inc stdlib/log.slm
+inc stdlib/mem.slm
+inc glfw.slm
+inc gl.slm
+
+class graphics
+  var win int.SIZE
+  
+  proc init 0 0
+    (glfw.Init)
+    ! if [
+      "ERR" "Failed to load glfw" (log.msg)
+      (log.log)
+      1 quit
+    ]
+    
+    640 480 "Shotgame" 0 0 (glfw.CreateWindow)
+    copy NULL == if [
+      "ERR" "Failed to load glfw" (log.msg)
+      (log.log)
+      1 quit
+    ]
+
+    graphics.win swap
+    put disc
+
+    "Init glfw" (cstr.println)
+  
+    graphics.win read (glfw.MakeContextCurrent)
+    
+    (gl.init)
+    
+    "Init gl" (cstr.println)
+
+    ret
+  end
+end

@@ -1,0 +1,15 @@
+format ELF64
+section '.text' executable
+public _start
+
+print:
+    mov r10, rsp
+    sub rsp, 8
+    mov [rsp], al
+    mov edi, 1
+    mov rsi, rsp
+    mov edx, 1
+    mov eax, 1
+    syscall
+    mov rsp, r10
+    ret

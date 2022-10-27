@@ -1,0 +1,152 @@
+inc stdlib/os.slm
+
+cproc png_sig_cmp 3 1 
+cproc png_create_read_struct 4 1
+cproc png_create_info_struct 1 1
+cproc png_init_io 2 0
+cproc png_set_sig_bytes 2 0
+cproc png_read_info 2 0
+cproc png_get_IHDR 9 0
+cproc png_read_update_info 2 0
+cproc png_get_rowbytes 2 1
+
+cproc fopen 2 1 
+cproc fread 4 0
+
+lnk png
+
+class png
+  prop width int.SIZE
+  prop height int.SIZE
+  prop depth int.SIZE
+  prop color int.SIZE
+  prop data int.SIZE
+  
+  gvar fp int.SIZE
+
+  gvar buff int.SIZE
+  gvar reads int.SIZE
+  gvar infos int.SIZE
+  gvar endis int.SIZE
+  gvar result int.SIZE
+  gvar rowbytes int.SIZE
+
+  proc init 0 0
+    "1.6.34" NULL NULL NULL
+
+    asm "pop rcx"
+    asm "pop rdx"
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_create_read_struct)
+    asm "push rax"
+    png.reads swap put disc
+    
+    png.reads read
+    asm "pop rdi"
+    (png_create_info_struct)
+    asm "push rax"
+    png.infos swap put disc
+    
+    png.reads read
+    asm "pop rdi"
+    (png_create_info_struct)
+    asm "push rax"
+    png.endis swap put disc
+
+    ret
+  end
+
+  proc new 1 1
+    png.result 32 (heap.zalloc) put disc
+
+    copy (cstr.println)
+    "r"
+    asm "pop rsi"
+    asm "pop rdi"
+    (fopen)
+    asm "push rax"
+    png.fp swap put disc
+
+    png.fp read NULL == if [NULL ret]
+    
+    png.buff 1 8 png.fp read
+    asm "pop rcx"
+    asm "pop rdx"
+    asm "pop rsi"
+    asm "pop rdi"
+    (fread) 
+
+    png.buff 0 8
+    asm "pop rdx"
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_sig_cmp)
+    asm "push rax"
+    if [NULL ret]
+   
+    png.reads read
+    png.fp read
+
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_init_io)
+  
+    png.reads read
+    8
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_set_sig_bytes)
+
+    png.reads read
+    png.infos read
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_read_info)
+
+    png.reads read
+    png.infos read
+    png.result read png.width .
+    png.result read png.height .
+    png.result read png.depth .
+    png.result read png.color .
+
+    asm "pop r9"
+    asm "pop r8"
+    asm "pop rcx"
+    asm "pop rdx"
+    asm "pop rsi"
+    asm "pop rdi"
+    NULL
+    NULL
+    NULL
+    (png_get_IHDR)
+
+    png.reads read
+    png.infos read
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_read_update_info)
+
+
+    png.reads read
+    png.infos read
+    asm "pop rsi"
+    asm "pop rdi"
+    (png_get_rowbytes)
+    asm "push rax"
+    png.rowbytes
+    swap put disc
+
+    png.result read png.data .
+
+    png.rowbytes read
+    png.result read png.height . read *
+    copy (int.print)
+    (heap.alloc) put disc
+
+    png.result read png.data .
+
+    ret
+  end
+end

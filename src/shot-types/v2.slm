@@ -1,0 +1,158 @@
+inc stdlib.slm
+inc stdlib/mem.slm
+inc imath.slm
+
+class v2
+  prop x int.SIZE
+  prop y int.SIZE
+
+  var tmp int.SIZE
+
+  proc new 2 1
+    v2.tmp 16 (heap.alloc) put disc
+
+
+    v2.tmp read v2.y . swap put disc
+    v2.tmp read v2.x . swap put disc
+
+    v2.tmp read
+    
+    ret
+  end
+
+  oper proc put 3 1
+    v2.tmp swap put disc
+
+    v2.tmp read v2.y . swap put disc
+    v2.tmp read v2.x . swap put disc
+
+    v2.tmp read
+    
+    ret
+  end
+
+  oper proc cpy 1 1
+    v2.tmp swap put disc
+
+    v2.tmp v2.x . read
+    v2.tmp v2.y . read
+    (v2.new)
+
+    ret
+  end
+
+  proc print 1 0
+    v2.tmp swap put disc
+    
+    "(" (cstr.print)
+    v2.tmp read v2.x . read (int.cstr) (cstr.print)
+    ", " (cstr.print)
+    v2.tmp read v2.y . read (int.cstr) (cstr.print)
+    ")" (cstr.print)
+    (cstr.cr)
+
+    ret
+  end
+
+  oper proc *= 2 0
+    swap 
+    covr 
+    covr v2.x . read
+    * covr v2.x . swap put disc
+    
+    covr
+    covr v2.y . read
+    * covr v2.y . swap put disc
+
+    disc disc
+
+    ret
+  end
+
+  oper proc += 2 0
+    swap
+    covr v2.x . read
+    covr v2.x . read
+    + covr v2.x . swap put disc
+    
+    covr v2.y . read
+    covr v2.y . read
+    + covr v2.y . swap put disc
+    disc disc
+
+    ret
+  end
+
+  oper proc -= 2 0
+    swap
+    covr v2.x . read
+    covr v2.x . read
+    swap
+    - covr v2.x . swap put disc
+    
+    covr v2.y . read
+    covr v2.y . read
+    swap
+    - covr v2.y . swap put disc
+    disc disc
+
+    ret
+  end
+
+  oper proc /= 2 0
+    swap
+    covr
+    covr v2.x . read
+    swap
+    / covr v2.x . swap put disc
+    
+    covr
+    covr v2.y . read
+    swap
+    / covr v2.y . swap put disc
+    disc disc
+
+    ret
+  end
+
+  proc magSq 1 1
+    v2.tmp swap put disc
+    
+    v2.tmp read v2.x . read copy *
+    v2.tmp read v2.y . read copy *
+    +
+
+    ret
+  end
+
+  proc mag 1 1
+    (v2.magSq) (imath.sqRoot)
+
+    ret
+  end
+
+  proc putAngle 2 1
+    disc
+
+    ret
+  end
+  
+  oper proc dotp 2 1
+    swap 
+    covr v2.x . read
+    covr v2.x . read
+    *
+    v2.tmp swap put disc
+    
+    covr v2.y . read
+    covr v2.y . read
+    *
+    v2.tmp read +
+    v2.tmp swap put disc
+    disc disc
+
+    v2.tmp read
+
+    ret
+  end
+end

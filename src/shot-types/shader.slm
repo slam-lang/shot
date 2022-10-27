@@ -1,0 +1,35 @@
+inc gl.slm
+inc stdlib/maps.slm
+
+class shader
+  prop id 8
+  prop params int.SIZE
+
+  var res int.SIZE
+  var vtmp int.SIZE
+  var ftmp int.SIZE
+  var vtmps int.SIZE
+  var ftmps int.SIZE
+  
+  proc new 2 1
+    shader.ftmps swap put disc
+    shader.vtmps swap put disc
+
+    shader.ftmp GL_FRAGMENT_SHADER (gl.CreateShader) put disc
+    shader.ftmp read 1 shader.ftmps NULL (gl.ShaderSource)
+    shader.ftmp read (gl.CompileShader)
+
+    shader.vtmp GL_VERTEX_SHADER (gl.CreateShader) put disc
+    shader.vtmp read 1 shader.vtmps NULL (gl.ShaderSource)
+    shader.vtmp read (gl.CompileShader)
+
+    shader.res 16 (heap.alloc) put disc
+    
+    shader.res read shader.id . (gl.CreateProgram) put disc
+    shader.res read shader.id . read shader.ftmp read (gl.AttachShader)
+    shader.res read shader.id . read shader.vtmp read (gl.AttachShader)
+    shader.res read shader.id . (gl.LinkProgram)
+
+    shader.res read ret
+  end
+end

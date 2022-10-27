@@ -1,0 +1,53 @@
+inc stdlib.slm
+inc stdlib/mem.slm
+
+inc shot-types/graphics.slm
+inc shot-types/tex.slm
+inc glfw.slm
+inc gl.slm
+
+class shotgame
+  var init int.SIZE
+  var update int.SIZE
+  var draw int.SIZE
+
+  proc start 0 0
+    (graphics.init)
+    (tex.init)
+    
+    shotgame.init read ()
+
+    do
+      10
+      shotgame.update read ()
+      disc
+
+      4000h
+      (gl.Clear)
+
+      shotgame.draw read ()
+
+      graphics.win read (glfw.SwapBuffers)
+      
+      (glfw.PollEvents)
+
+      graphics.win read (glfw.WindowShouldClose) !
+    end
+
+    graphics.win read (glfw.DestroyWindow)
+  
+    (glfw.Terminate)
+  
+    ret
+  end
+
+  proc new 3 0
+    shotgame.draw swap put disc
+    shotgame.update swap put disc
+    shotgame.init swap put disc
+  
+    (shotgame.start)
+
+    ret
+  end
+end
