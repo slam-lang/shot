@@ -1,4 +1,4 @@
-"slam-lang/stdlib" req
+"slam-lang/slam-stdlib" req
 "slam-lang/math" req
 "slam-lang/opengl" req
 
